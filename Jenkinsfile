@@ -3,22 +3,25 @@ pipeline {
 
     stages {
         stage('Build Docker Image') {
-             steps {
-                script{
+            steps {
+                script {
                     dockerapp = docker.build("Beatriz-dos-Anjos/guia-jenkins:${env.BUILD_ID}", '-f ./src/Dockerfile')
+                }
             }
         }
         stage('Push Docker Image') {
             steps {
-                script{
-                    docker.withRegistry('https://registry.hub.docker.com', 'dockerhub'){
+                script {
+                    docker.withRegistry('https://registry.hub.docker.com', 'dockerhub') {
                         dockerapp.push('latest')
-                        dockerapp.push('env.BUILD_ID')
+                        dockerapp.push("${env.BUILD_ID}")
+                    }
+                }
             }
         }
         stage('Deploy') {
             steps {
-                sh 'echo "Executando o comando kubeclt apply"'
+                sh 'echo "Executando o comando kubectl apply"'
             }
         }
     }
