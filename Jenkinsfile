@@ -4,12 +4,16 @@ pipeline {
     stages {
         stage('Build Docker Image') {
              steps {
-                sh 'echo "Executando Docker Build..."'
+                script{
+                    dockerapp = docker.build("Beatriz-dos-Anjos/guia-jenkins:${env.BUILD_ID}", '-f ./src/Dockerfile')
             }
         }
         stage('Push Docker Image') {
             steps {
-                sh 'echo "Executando Push do Docker Image..."'
+                script{
+                    docker.withRegistry('https://registry.hub.docker.com', 'dockerhub'){
+                        dockerapp.push('latest')
+                        dockerapp.push('env.BUILD_ID')
             }
         }
         stage('Deploy') {
