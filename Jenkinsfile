@@ -6,9 +6,6 @@ pipeline {
              steps {
                 sh 'echo "Executando Docker Build..."'
             }
-            steps {
-                sh 'echo "Building..."'
-            }
         }
         stage('Push Docker Image') {
             steps {
